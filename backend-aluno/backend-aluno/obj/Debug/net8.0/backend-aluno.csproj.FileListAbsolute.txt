@@ -171,3 +171,4 @@ C:\Users\gusta\OneDrive\Área de Trabalho\ProjetoAluno\backend-aluno\backend-alu
 C:\Users\gusta\OneDrive\Área de Trabalho\ProjetoAluno\backend-aluno\backend-aluno\obj\Debug\net8.0\ref\backend-aluno.dll
 C:\Users\gusta\OneDrive\Área de Trabalho\ProjetoAluno\backend-aluno\backend-aluno\bin\Debug\net8.0\AutoMapper.dll
 C:\Users\gusta\OneDrive\Área de Trabalho\ProjetoAluno\backend-aluno\backend-aluno\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\gusta\OneDrive\Área de Trabalho\ProjetoAluno\backend-aluno\backend-aluno\obj\Debug\net8.0\backend-aluno.sourcelink.json
