@@ -10,5 +10,11 @@ namespace backend_aluno.Dto
         public string Email { get; set; }
         [Required]
         public int Idade { get; set; }
+        [Required(ErrorMessage = "Digite a Senha")]
+        public string Senha { get; set; }
+
+        [Required(ErrorMessage = "Digite a Confirmação de senha"),
+        Compare("Senha", ErrorMessage = "As senhas não são iguais")]
+        public string ConfirmaSenha { get; set; }
     }
 }

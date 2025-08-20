@@ -10,5 +10,6 @@ namespace backend_aluno.Services.Interface
         Task<ResponseModel<AlunoModel>> BuscarAlunoPorId(int id);
         Task<ResponseModel<AlunoModel>> EditarAluno(AlunoEdicaoDto alunoEdicaoDto);
         Task<ResponseModel<AlunoModel>> DeletarAluno(int id);
+        Task<ResponseModel<AlunoModel>> Login(AlunoLoginDto alunoLoginDto);
     }
 }

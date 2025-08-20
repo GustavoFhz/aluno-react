@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("backend-aluno")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8fb4b218bc86adf462b1e0ee56d3bc78538a9e1e")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+240194838a0514724cc9cd4e2076e2962b647969")]
 [assembly: System.Reflection.AssemblyProductAttribute("backend-aluno")]
 [assembly: System.Reflection.AssemblyTitleAttribute("backend-aluno")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

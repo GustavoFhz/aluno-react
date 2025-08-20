@@ -3,6 +3,7 @@ using backend_aluno.Data;
 using backend_aluno.Dto;
 using backend_aluno.Models;
 using backend_aluno.Services.Interface;
+using backend_aluno.Services.Senha;
 using Microsoft.EntityFrameworkCore;
 
 namespace backend_aluno.Services
@@ -11,10 +12,14 @@ namespace backend_aluno.Services
     {
         private readonly AppDbContext _context;
         private readonly IMapper _mapper;
-        public AlunoService(AppDbContext context, IMapper mapper)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        private readonly ISenhaInterface _senhaInterface;
+        public AlunoService(AppDbContext context, IMapper mapper, IHttpContextAccessor httpContextAccessor, ISenhaInterface senhaInterface)
         {
             _context = context;
             _mapper = mapper;
+            _httpContextAccessor = httpContextAccessor;
+            _senhaInterface = senhaInterface;
         }
         public async Task<ResponseModel<AlunoModel>> EditarAluno(AlunoEdicaoDto alunoEdicaoDto)
         {
@@ -144,8 +149,13 @@ namespace backend_aluno.Services
                     response.Mensagem = "Aluno já cadastrado";
                     return response;
                 }
+                _senhaInterface.CriarSenhaHash(alunoCriacaoDto.Senha, out byte[] senhaHash, out byte[] senhaSalt);
 
                 AlunoModel aluno = _mapper.Map<AlunoModel>(alunoCriacaoDto);
+                aluno.SenhaHash = senhaHash;
+                aluno.SenhaSalt = senhaSalt;
+                
+
 
                 _context.Add(aluno);
                 await _context.SaveChangesAsync();
@@ -167,5 +177,44 @@ namespace backend_aluno.Services
         {
             return _context.Alunos.Any(item => item.Nome == alunoCriacaoDto.Nome);
         }
+        public async Task<ResponseModel<AlunoModel>> Login(AlunoLoginDto alunoLoginDto)
+        {
+            ResponseModel<AlunoModel> response = new ResponseModel<AlunoModel>();
+
+            try
+            {
+                var aluno = await _context.Alunos.FirstOrDefaultAsync(userBanco => userBanco.Email == alunoLoginDto.Email);
+
+                if (aluno == null)
+                {
+                    response.Mensagem = "Credenciais inválidas!";
+                    return response;
+                }
+
+                if (!_senhaInterface.VerificaSenhaHash(alunoLoginDto.Senha, aluno.SenhaHash, aluno.SenhaSalt))
+                {
+                    response.Mensagem = "Credenciais inválidas!";
+                    return response;
+                }
+
+                var token = _senhaInterface.CriarToken(aluno);
+                aluno.Token = token;
+
+                _context.Update(aluno);
+                await _context.SaveChangesAsync();
+
+                response.Dados = aluno;
+                response.Mensagem = "Usuário logado com sucesso!";
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                response.Mensagem = (ex.Message);
+                response.Status = false;
+                return response;
+            }
+        }
+
     }
 }

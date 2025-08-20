@@ -10,6 +10,6 @@ namespace backend_aluno.Data
         }
         public DbSet<AlunoModel> Alunos { get; set; }
     }
-    
-    
+
+
 }

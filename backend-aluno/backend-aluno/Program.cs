@@ -3,21 +3,41 @@ using backend_aluno.Profiles;
 using backend_aluno.Services;
 using backend_aluno.Services.Interface;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using backend_aluno.Services.Senha;
 
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 builder.Services.AddAutoMapper(typeof(AlunoProfile).Assembly);
+
 builder.Services.AddScoped<IAlunoInterface, AlunoService>();
+builder.Services.AddScoped<ISenhaInterface, ISenhaInterface>();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration.GetSection("AppSettings:Token").Value)
+            ),
+            ValidateAudience = false,
+            ValidateIssuer = false
+        };
+    });
+
 
 builder.Services.AddCors(options =>
 {
@@ -29,12 +49,8 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 var app = builder.Build();
 
-
-
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -45,6 +61,7 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAllOrigins");
 
+app.UseAuthentication(); 
 app.UseAuthorization();
 
 app.MapControllers();

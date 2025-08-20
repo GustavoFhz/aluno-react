@@ -1,6 +1,5 @@
 ﻿using backend_aluno.Dto;
 using backend_aluno.Services.Interface;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend_aluno.Controllers
@@ -15,12 +14,6 @@ namespace backend_aluno.Controllers
             _alunoInterface = alunoInterface;
         }
 
-        [HttpPost]
-        public async Task<IActionResult> RegistrarAluno([FromBody] AlunoCriacaoDto alunoCriacaoDto)
-        {
-            var aluno = await _alunoInterface.RegistrarAluno(alunoCriacaoDto);
-            return Ok(aluno);
-        }
        
         [HttpGet]
         public async Task<IActionResult> ListarAlunos()
